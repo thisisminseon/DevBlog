@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Footer fragment -->
+<footer th:fragment="footer" class="footer">
+    <div class="footer-inner">
+        <div>
+            <div class="footer-logo">Dev<span>Blog</span></div>
+            <p class="footer-desc">技術的な知見や学びを共有するための個人テックブログです。</p>
+        </div>
+        <div class="footer-links">
+            <div class="footer-links-group">
+                <h4>リンク</h4>
+                <a href="/hello">ホーム</a>
+                <a th:href="@{/post/search}">記事検索</a>
+            </div>
+            <div class="footer-links-group">
+                <h4>コンタクト</h4>
+                <a href="#">GitHub</a>
+                <a href="#">Portfolio</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 DevBlog. All rights reserved.
+    </div>
+</footer>
+
+</html>

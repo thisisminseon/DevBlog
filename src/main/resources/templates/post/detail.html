@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.title} + ' - DevBlog'">投稿詳細</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<article class="post-detail">
+
+    <!-- Post Header -->
+    <div class="post-detail-header">
+        <h1 class="post-detail-title" th:text="${post.title}">Title</h1>
+        <div class="post-detail-meta">
+            <span class="author" th:text="${post.username != null ? post.username : post.author}">author</span>
+            <span th:text="${#temporals.format(post.createdAt, 'yyyy年MM月dd日')}">2024年01月01日</span>
+            <span th:text="'閲覧 ' + ${post.viewCount}">閲覧 0</span>
+        </div>
+
+        <!-- Tags -->
+        <div th:if="${post.tagNames != null && !post.tagNames.isEmpty()}" class="post-detail-tags">
+            <a th:each="tagName : ${post.tagNames}"
+               th:href="@{/(tag=${tagName})}"
+               th:text="'#' + ${tagName}"
+               class="tag"></a>
+        </div>
+    </div>
+
+    <!-- Post Content (markdown HTML) -->
+    <div class="post-detail-content" th:utext="${post.contentHtml}"></div>
+
+    <!-- Attached Images -->
+    <div th:if="${images != null && !images.isEmpty()}" class="post-images">
+        <a th:each="image : ${images}" th:href="${image.filePath}" target="_blank">
+            <img th:src="${image.thumbnailPath != null ? image.thumbnailPath : image.filePath}"
+                 alt="添付画像">
+        </a>
+    </div>
+
+    <!-- Post Actions -->
+    <div class="post-actions">
+        <!-- Like button -->
+        <button id="likeBtn" class="btn-like"
+                th:classappend="${liked} ? 'liked' : ''"
+                th:onclick="'toggleLike(' + ${post.id} + ')'"
+                sec:authorize="isAuthenticated()">
+            <span class="like-icon" th:text="${liked} ? '&#x2764;' : '&#x2661;'"></span>
+            <span id="likeCount" th:text="${post.likeCount}">0</span>
+        </button>
+
+        <!-- Non-logged-in like display -->
+        <span sec:authorize="!isAuthenticated()" class="btn-like" style="cursor:default;">
+            <span class="like-icon">&#x2661;</span>
+            <span th:text="${post.likeCount}">0</span>
+        </span>
+
+        <!-- Edit / Delete (owner only) -->
+        <div th:if="${isOwner}" class="post-action-links">
+            <a th:href="@{/post/edit/{id}(id=${post.id})}" class="btn btn-secondary btn-sm">編集</a>
+            <form th:id="'deleteForm-' + ${post.id}" th:action="@{/post/delete/{id}(id=${post.id})}" method="post" style="display:inline;">
+                <button type="button" th:onclick="'confirmDelete(' + ${post.id} + ')'" class="btn btn-danger btn-sm">削除</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h3 class="comments-title" th:text="'コメント (' + ${#lists.size(comments)} + ')'">コメント (0)</h3>
+
+        <!-- Comment form (logged in only) -->
+        <div sec:authorize="isAuthenticated()" class="comment-form">
+            <form th:action="@{/comment/add}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="postId" th:value="${post.id}">
+                <textarea name="content" placeholder="コメントを入力してください..." required></textarea>
+                <div class="comment-form-actions">
+                    <div>
+                        <label class="btn btn-outline btn-sm" style="cursor:pointer;">
+                            画像添付
+                            <input type="file" name="image" accept="image/*" style="display:none;"
+                                   onchange="previewCommentImage(this)">
+                        </label>
+                        <div id="commentImagePreview"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">投稿</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Not logged in message -->
+        <div sec:authorize="!isAuthenticated()" class="comment-form" style="text-align:center;">
+            <p>コメントするには<a th:href="@{/auth/login}" style="color:#6366f1;font-weight:500;">ログイン</a>してください。</p>
+        </div>
+
+        <!-- Comment list -->
+        <div th:each="comment : ${comments}" th:id="'comment-' + ${comment.id}" class="comment-item">
+            <div class="comment-header">
+                <div class="comment-avatar">&#128100;</div>
+                <span class="comment-username" th:text="${comment.username}">user</span>
+                <span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}">2024.01.01</span>
+            </div>
+            <div th:id="'comment-content-' + ${comment.id}" class="comment-content"
+                 th:text="${comment.content}">content</div>
+
+            <!-- Comment image -->
+            <div th:if="${comment.imagePath != null}" class="comment-image">
+                <img th:src="${comment.imagePath}" alt="コメント画像">
+            </div>
+
+            <!-- Comment actions (owner only) -->
+            <div sec:authorize="isAuthenticated()" class="comment-actions"
+                 th:id="'comment-actions-' + ${comment.id}">
+                <span th:if="${#authentication.principal.getUserId() == comment.userId}">
+                    <button class="btn btn-outline btn-sm"
+                            th:onclick="'editComment(' + ${comment.id} + ')'">編集</button>
+                    <button class="btn btn-danger btn-sm"
+                            th:onclick="'deleteComment(' + ${comment.id} + ')'">削除</button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+</article>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

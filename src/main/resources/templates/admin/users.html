@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザー管理 - DevBlog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="admin-page">
+
+    <h2>ユーザー管理</h2>
+
+    <!-- Alert messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <!-- Admin navigation -->
+    <div class="admin-nav">
+        <a th:href="@{/admin}" class="btn btn-secondary">ダッシュボード</a>
+        <a th:href="@{/admin/users}" class="btn btn-primary">ユーザー管理</a>
+        <a th:href="@{/admin/posts}" class="btn btn-secondary">投稿管理</a>
+    </div>
+
+    <!-- Users table -->
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ユーザー名</th>
+                <th>メールアドレス</th>
+                <th>権限</th>
+                <th>登録日</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="u : ${users}">
+                <td th:text="${u.id}">1</td>
+                <td th:text="${u.username}">user</td>
+                <td th:text="${u.email}">email</td>
+                <td>
+                    <span class="role-badge"
+                          th:classappend="${u.role == 'ADMIN'} ? 'admin' : 'user'"
+                          th:text="${u.role}">USER</span>
+                </td>
+                <td th:text="${#temporals.format(u.createdAt, 'yyyy.MM.dd')}">2024.01.01</td>
+                <td>
+                    <form th:action="@{/admin/users/{id}/role(id=${u.id})}" method="post"
+                          style="display:inline;">
+                        <select name="role" onchange="this.form.submit()" style="padding:4px 8px;border:1px solid #ddd;border-radius:4px;font-size:12px;">
+                            <option value="USER" th:selected="${u.role == 'USER'}">USER</option>
+                            <option value="ADMIN" th:selected="${u.role == 'ADMIN'}">ADMIN</option>
+                        </select>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

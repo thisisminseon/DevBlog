@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイページ - DevBlog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="mypage">
+
+    <!-- Alert messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <!-- Profile card -->
+    <div class="profile-card">
+        <div class="profile-icon">&#128100;</div>
+        <div class="profile-info">
+            <h3 th:text="${user.username}">username</h3>
+            <p th:text="${user.email}">email@example.com</p>
+            <p class="text-muted" th:text="'登録日: ' + ${#temporals.format(user.createdAt, 'yyyy年MM月dd日')}">登録日: 2024年01月01日</p>
+        </div>
+        <div class="profile-actions">
+            <a th:href="@{/mypage/edit-profile}" class="btn btn-secondary btn-sm">プロフィール編集</a>
+        </div>
+    </div>
+
+    <!-- My posts -->
+    <h2 class="section-title">マイ投稿</h2>
+
+    <div th:if="${#lists.isEmpty(posts)}" class="text-center" style="padding:40px 0;color:#999;">
+        <p>まだ投稿がありません。</p>
+        <a th:href="@{/post/write}" class="btn btn-primary mt-20">最初の投稿を作成</a>
+    </div>
+
+    <a th:each="post : ${posts}" th:href="@{/post/detail/{id}(id=${post.id})}" class="post-card">
+        <div class="post-card-thumbnail">
+            <img th:if="${post.thumbnailPath != null}" th:src="${post.thumbnailPath}" alt="thumbnail">
+            <div th:if="${post.thumbnailPath == null}" class="no-image">&#128196;</div>
+        </div>
+        <div class="post-card-body">
+            <div class="post-card-meta">
+                <span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2024.01.01</span>
+                <span th:if="${post.isPrivate != null && post.isPrivate}" class="private-badge">非公開</span>
+            </div>
+            <h3 class="post-card-title" th:text="${post.title}">Title</h3>
+            <p class="post-card-desc" th:text="${post.description}">description</p>
+            <div class="post-card-tags">
+                <span th:each="tagName : ${post.tagNames}" th:text="'#' + ${tagName}" class="tag"></span>
+            </div>
+        </div>
+    </a>
+
+    <!-- Pagination -->
+    <div th:if="${pageInfo != null && pageInfo.totalPages > 1}" class="pagination">
+        <a th:if="${pageInfo.hasPrevious}"
+           th:href="@{/mypage(page=${pageInfo.currentPage - 1})}">&laquo;</a>
+        <span th:if="${!pageInfo.hasPrevious}" class="disabled">&laquo;</span>
+
+        <th:block th:each="p : ${pageInfo.pageNumbers}">
+            <span th:if="${p == pageInfo.currentPage}" class="active" th:text="${p}">1</span>
+            <a th:if="${p != pageInfo.currentPage}"
+               th:href="@{/mypage(page=${p})}"
+               th:text="${p}">1</a>
+        </th:block>
+
+        <a th:if="${pageInfo.hasNext}"
+           th:href="@{/mypage(page=${pageInfo.currentPage + 1})}">&raquo;</a>
+        <span th:if="${!pageInfo.hasNext}" class="disabled">&raquo;</span>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

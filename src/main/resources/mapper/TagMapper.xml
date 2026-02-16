@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devblog.mapper.TagMapper">
+
+    <!-- Find tag by ID -->
+    <select id="findById" parameterType="long" resultType="com.devblog.domain.Tag">
+        SELECT * FROM tag WHERE id = #{id}
+    </select>
+
+    <!-- Find tag by name -->
+    <select id="findByName" parameterType="string" resultType="com.devblog.domain.Tag">
+        SELECT * FROM tag WHERE name = #{name}
+    </select>
+
+    <!-- Insert new tag -->
+    <insert id="insert" parameterType="com.devblog.domain.Tag"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tag (name) VALUES (#{name})
+    </insert>
+
+    <!-- Find all tags -->
+    <select id="findAll" resultType="com.devblog.domain.Tag">
+        SELECT * FROM tag ORDER BY name ASC
+    </select>
+
+    <!-- Find tags by post ID -->
+    <select id="findByPostId" parameterType="long" resultType="com.devblog.domain.Tag">
+        SELECT t.*
+        FROM tag t
+        INNER JOIN post_tag pt ON t.id = pt.tag_id
+        WHERE pt.post_id = #{postId}
+        ORDER BY t.name ASC
+    </select>
+
+    <!-- Find popular tags (top N by public post count) -->
+    <select id="findPopular" resultType="com.devblog.domain.Tag">
+        SELECT t.*, COUNT(pt.post_id) AS post_count
+        FROM tag t
+        INNER JOIN post_tag pt ON t.id = pt.tag_id
+        INNER JOIN post p ON pt.post_id = p.id
+        WHERE p.is_private = FALSE OR p.is_private IS NULL
+        GROUP BY t.id, t.name
+        ORDER BY post_count DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

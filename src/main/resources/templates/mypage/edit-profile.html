@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロフィール編集 - DevBlog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="mypage">
+
+    <!-- Alert messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <h2 class="section-title">プロフィール編集</h2>
+
+    <!-- Edit profile form -->
+    <div class="auth-card" style="max-width:500px;margin:0 auto;">
+        <h2 style="font-size:18px;">基本情報</h2>
+        <form th:action="@{/mypage/edit-profile}" method="post">
+            <div class="form-group">
+                <label for="username">ユーザー名</label>
+                <input type="text" id="username" name="username" th:value="${user.username}"
+                       required minlength="2" maxlength="50">
+            </div>
+            <div class="form-group">
+                <label for="email">メールアドレス</label>
+                <input type="email" id="email" name="email" th:value="${user.email}" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">更新する</button>
+        </form>
+    </div>
+
+    <!-- Change password -->
+    <div class="auth-card mt-30" style="max-width:500px;margin:30px auto 0;">
+        <h2 style="font-size:18px;">パスワード変更</h2>
+        <form th:action="@{/mypage/change-password}" method="post">
+            <div class="form-group">
+                <label for="currentPassword">現在のパスワード</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">新しいパスワード</label>
+                <input type="password" id="newPassword" name="newPassword" required minlength="4">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">新しいパスワード確認</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">パスワード変更</button>
+        </form>
+    </div>
+
+    <!-- Delete account -->
+    <div class="auth-card mt-30" style="max-width:500px;margin:30px auto 0;">
+        <h2 style="font-size:18px;color:#dc2626;">アカウント削除</h2>
+        <p style="font-size:13px;color:#666;margin-bottom:16px;">
+            アカウントを削除すると、すべてのデータが失われます。この操作は元に戻せません。
+        </p>
+        <form id="deleteAccountForm" th:action="@{/mypage/delete-account}" method="post">
+            <button type="button" class="btn btn-danger btn-block" onclick="confirmDeleteAccount()">
+                アカウントを削除する
+            </button>
+        </form>
+    </div>
+
+    <div class="text-center mt-20">
+        <a th:href="@{/mypage}" class="btn btn-secondary">マイページに戻る</a>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

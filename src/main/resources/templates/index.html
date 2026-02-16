@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBlog - Tech Blog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Dev<span style="color:#6366f1">Blog</span></h1>
+        <p>技術的な知見や学びを共有するテックブログ</p>
+        <div class="hero-tags">
+            <a th:each="tag : ${allTags}"
+               th:href="@{/hello(tag=${tag.name})}"
+               th:text="'#' + ${tag.name}"
+               class="hero-tag">
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Post List Section -->
+<section class="post-list-section">
+    <div class="container">
+
+        <!-- Section title -->
+        <h2 class="section-title">
+            <span th:if="${currentTag != null}" th:text="'#' + ${currentTag} + ' の記事'"></span>
+            <span th:if="${currentTag == null}">最新記事</span>
+        </h2>
+
+        <!-- No posts -->
+        <div th:if="${#lists.isEmpty(posts)}" class="text-center" style="padding:60px 0;color:#999;">
+            <p>まだ記事がありません。</p>
+        </div>
+
+        <!-- Post cards -->
+        <a th:each="post : ${posts}" th:href="@{/post/detail/{id}(id=${post.id})}" class="post-card">
+            <div class="post-card-thumbnail">
+                <img th:if="${post.thumbnailPath != null}" th:src="${post.thumbnailPath}" alt="thumbnail">
+                <div th:if="${post.thumbnailPath == null}" class="no-image">&#128196;</div>
+            </div>
+            <div class="post-card-body">
+                <div class="post-card-meta">
+                    <span th:text="${post.username != null ? post.username : post.author}">author</span>
+                    <span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2024.01.01</span>
+                </div>
+                <h3 class="post-card-title" th:text="${post.title}">Title</h3>
+                <p class="post-card-desc" th:text="${post.description != null ? post.description : ''}">description</p>
+                <div class="post-card-tags">
+                    <span th:each="tagName : ${post.tagNames}" th:text="'#' + ${tagName}" class="tag"></span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Pagination -->
+        <div th:if="${pageInfo != null && pageInfo.totalPages > 1}" class="pagination">
+            <a th:if="${pageInfo.hasPrevious}"
+               th:href="@{/hello(page=${pageInfo.currentPage - 1}, tag=${currentTag})}">&laquo;</a>
+            <span th:if="${!pageInfo.hasPrevious}" class="disabled">&laquo;</span>
+
+            <th:block th:each="p : ${pageInfo.pageNumbers}">
+                <span th:if="${p == pageInfo.currentPage}" class="active" th:text="${p}">1</span>
+                <a th:if="${p != pageInfo.currentPage}"
+                   th:href="@{/hello(page=${p}, tag=${currentTag})}"
+                   th:text="${p}">1</a>
+            </th:block>
+
+            <a th:if="${pageInfo.hasNext}"
+               th:href="@{/hello(page=${pageInfo.currentPage + 1}, tag=${currentTag})}">&raquo;</a>
+            <span th:if="${!pageInfo.hasNext}" class="disabled">&raquo;</span>
+        </div>
+
+    </div>
+</section>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

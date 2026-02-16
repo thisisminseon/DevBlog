@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>検索結果 - DevBlog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section class="post-list-section">
+    <div class="container">
+
+        <!-- Search header -->
+        <div class="search-results-header">
+            <h2 th:text="'「' + ${keyword} + '」の検索結果'">検索結果</h2>
+            <p th:text="${pageInfo != null ? pageInfo.totalCount + ' 件の記事が見つかりました' : ''}"></p>
+        </div>
+
+        <!-- No results -->
+        <div th:if="${#lists.isEmpty(posts)}" class="text-center" style="padding:60px 0;color:#999;">
+            <p>検索結果が見つかりませんでした。</p>
+            <a href="/hello" class="btn btn-secondary mt-20">ホームに戻る</a>
+        </div>
+
+        <!-- Post cards -->
+        <a th:each="post : ${posts}" th:href="@{/post/detail/{id}(id=${post.id})}" class="post-card">
+            <div class="post-card-thumbnail">
+                <img th:if="${post.thumbnailPath != null}" th:src="${post.thumbnailPath}" alt="thumbnail">
+                <div th:if="${post.thumbnailPath == null}" class="no-image">&#128196;</div>
+            </div>
+            <div class="post-card-body">
+                <div class="post-card-meta">
+                    <span th:text="${post.username != null ? post.username : post.author}">author</span>
+                    <span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2024.01.01</span>
+                </div>
+                <h3 class="post-card-title" th:text="${post.title}">Title</h3>
+                <p class="post-card-desc" th:text="${post.description}">description</p>
+                <div class="post-card-tags">
+                    <span th:each="tagName : ${post.tagNames}" th:text="'#' + ${tagName}" class="tag"></span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Pagination -->
+        <div th:if="${pageInfo != null && pageInfo.totalPages > 1}" class="pagination">
+            <a th:if="${pageInfo.hasPrevious}"
+               th:href="@{/post/search(keyword=${keyword}, page=${pageInfo.currentPage - 1})}">&laquo;</a>
+            <span th:if="${!pageInfo.hasPrevious}" class="disabled">&laquo;</span>
+
+            <th:block th:each="p : ${pageInfo.pageNumbers}">
+                <span th:if="${p == pageInfo.currentPage}" class="active" th:text="${p}">1</span>
+                <a th:if="${p != pageInfo.currentPage}"
+                   th:href="@{/post/search(keyword=${keyword}, page=${p})}"
+                   th:text="${p}">1</a>
+            </th:block>
+
+            <a th:if="${pageInfo.hasNext}"
+               th:href="@{/post/search(keyword=${keyword}, page=${pageInfo.currentPage + 1})}">&raquo;</a>
+            <span th:if="${!pageInfo.hasNext}" class="disabled">&raquo;</span>
+        </div>
+
+    </div>
+</section>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

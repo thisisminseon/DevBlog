@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devblog.mapper.CommentMapper">
+
+    <!-- Find comments by post ID with user info -->
+    <select id="findByPostId" parameterType="long" resultType="com.devblog.domain.Comment">
+        SELECT c.*, u.username
+        FROM comment c
+        LEFT JOIN users u ON c.user_id = u.id
+        WHERE c.post_id = #{postId}
+        ORDER BY c.created_at ASC
+    </select>
+
+    <!-- Find comment by ID -->
+    <select id="findById" parameterType="long" resultType="com.devblog.domain.Comment">
+        SELECT c.*, u.username
+        FROM comment c
+        LEFT JOIN users u ON c.user_id = u.id
+        WHERE c.id = #{id}
+    </select>
+
+    <!-- Insert new comment -->
+    <insert id="insert" parameterType="com.devblog.domain.Comment"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO comment (post_id, user_id, content, image_path)
+        VALUES (#{postId}, #{userId}, #{content}, #{imagePath})
+    </insert>
+
+    <!-- Update comment -->
+    <update id="update" parameterType="com.devblog.domain.Comment">
+        UPDATE comment
+        SET content = #{content},
+            image_path = #{imagePath},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- Delete comment -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM comment WHERE id = #{id}
+    </delete>
+
+    <!-- Count comments by post ID -->
+    <select id="countByPostId" parameterType="long" resultType="int">
+        SELECT COUNT(*) FROM comment WHERE post_id = #{postId}
+    </select>
+
+</mapper>

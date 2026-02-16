@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者ダッシュボード - DevBlog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="admin-page">
+
+    <h2>管理者ダッシュボード</h2>
+
+    <!-- Alert messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number" th:text="${userCount}">0</div>
+            <div class="stat-label">ユーザー数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" th:text="${postCount}">0</div>
+            <div class="stat-label">投稿数</div>
+        </div>
+    </div>
+
+    <!-- Admin navigation -->
+    <div class="admin-nav">
+        <a th:href="@{/admin/users}" class="btn btn-secondary">ユーザー管理</a>
+        <a th:href="@{/admin/posts}" class="btn btn-secondary">投稿管理</a>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

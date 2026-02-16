@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投稿管理 - DevBlog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="admin-page">
+
+    <h2>投稿管理</h2>
+
+    <!-- Alert messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <!-- Admin navigation -->
+    <div class="admin-nav">
+        <a th:href="@{/admin}" class="btn btn-secondary">ダッシュボード</a>
+        <a th:href="@{/admin/users}" class="btn btn-secondary">ユーザー管理</a>
+        <a th:href="@{/admin/posts}" class="btn btn-primary">投稿管理</a>
+    </div>
+
+    <!-- Posts table -->
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>タイトル</th>
+                <th>投稿者</th>
+                <th>状態</th>
+                <th>作成日</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post : ${posts}">
+                <td th:text="${post.id}">1</td>
+                <td>
+                    <a th:href="@{/post/detail/{id}(id=${post.id})}" th:text="${post.title}"
+                       style="color:#6366f1;">Title</a>
+                </td>
+                <td th:text="${post.username != null ? post.username : post.author}">author</td>
+                <td>
+                    <span th:if="${post.isPrivate != null && post.isPrivate}" class="private-badge">非公開</span>
+                    <span th:if="${post.isPrivate == null || !post.isPrivate}"
+                          style="color:#16a34a;font-size:12px;font-weight:500;">公開</span>
+                </td>
+                <td th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2024.01.01</td>
+                <td>
+                    <form th:action="@{/admin/posts/{id}/toggle-visibility(id=${post.id})}" method="post"
+                          style="display:inline;">
+                        <button type="submit" class="btn btn-outline btn-sm"
+                                th:text="${post.isPrivate != null && post.isPrivate} ? '公開する' : '非公開にする'">
+                            切替
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div th:if="${pageInfo != null && pageInfo.totalPages > 1}" class="pagination">
+        <a th:if="${pageInfo.hasPrevious}"
+           th:href="@{/admin/posts(page=${pageInfo.currentPage - 1})}">&laquo;</a>
+        <span th:if="${!pageInfo.hasPrevious}" class="disabled">&laquo;</span>
+
+        <th:block th:each="p : ${pageInfo.pageNumbers}">
+            <span th:if="${p == pageInfo.currentPage}" class="active" th:text="${p}">1</span>
+            <a th:if="${p != pageInfo.currentPage}"
+               th:href="@{/admin/posts(page=${p})}"
+               th:text="${p}">1</a>
+        </th:block>
+
+        <a th:if="${pageInfo.hasNext}"
+           th:href="@{/admin/posts(page=${pageInfo.currentPage + 1})}">&raquo;</a>
+        <span th:if="${!pageInfo.hasNext}" class="disabled">&raquo;</span>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

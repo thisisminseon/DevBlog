@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devblog.mapper.PostMapper">
+
+    <!-- Get all posts (legacy) -->
+    <select id="findAll" resultType="com.devblog.domain.Post">
+        SELECT *
+        FROM post
+        ORDER BY id DESC
+    </select>
+
+    <!-- Insert new post -->
+    <insert id="insert"
+            parameterType="com.devblog.domain.Post"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO post
+        (user_id, category_id, title, content, description, author, is_private)
+        VALUES
+        (#{userId}, #{categoryId}, #{title}, #{content}, #{description}, #{author}, #{isPrivate})
+    </insert>
+
+    <!-- Find post by ID -->
+    <select id="findById"
+            parameterType="long"
+            resultType="com.devblog.domain.Post">
+        SELECT *
+        FROM post
+        WHERE id = #{id}
+    </select>
+
+    <!-- Find post by ID with user info -->
+    <select id="findByIdWithUser"
+            parameterType="long"
+            resultType="com.devblog.domain.Post">
+        SELECT p.*, u.username
+        FROM post p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id = #{id}
+    </select>
+
+    <!-- Update post -->
+    <update id="update" parameterType="com.devblog.domain.Post">
+        UPDATE post
+        SET title = #{title},
+            content = #{content},
+            description = #{description},
+            is_private = #{isPrivate},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- Delete post -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM post
+        WHERE id = #{id}
+    </delete>
+
+    <!-- Find public posts with pagination (with user info and first thumbnail) -->
+    <select id="findPublicPosts" resultType="com.devblog.domain.Post">
+        SELECT p.*, u.username,
+               (SELECT pi.thumbnail_path FROM post_image pi
+                WHERE pi.post_id = p.id ORDER BY pi.id ASC LIMIT 1) AS thumbnail_path
+        FROM post p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.is_private = FALSE OR p.is_private IS NULL
+        ORDER BY p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- Count total public posts -->
+    <select id="countPublicPosts" resultType="int">
+        SELECT COUNT(*)
+        FROM post
+        WHERE is_private = FALSE OR is_private IS NULL
+    </select>
+
+    <!-- Find posts by tag name with pagination -->
+    <select id="findByTag" resultType="com.devblog.domain.Post">
+        SELECT p.*, u.username,
+               (SELECT pi.thumbnail_path FROM post_image pi
+                WHERE pi.post_id = p.id ORDER BY pi.id ASC LIMIT 1) AS thumbnail_path
+        FROM post p
+        LEFT JOIN users u ON p.user_id = u.id
+        INNER JOIN post_tag pt ON p.id = pt.post_id
+        INNER JOIN tag t ON pt.tag_id = t.id
+        WHERE t.name = #{tagName}
+          AND (p.is_private = FALSE OR p.is_private IS NULL)
+        ORDER BY p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- Count posts by tag name -->
+    <select id="countByTag" resultType="int">
+        SELECT COUNT(*)
+        FROM post p
+        INNER JOIN post_tag pt ON p.id = pt.post_id
+        INNER JOIN tag t ON pt.tag_id = t.id
+        WHERE t.name = #{tagName}
+          AND (p.is_private = FALSE OR p.is_private IS NULL)
+    </select>
+
+    <!-- Search posts by keyword (title or content) -->
+    <select id="searchPosts" resultType="com.devblog.domain.Post">
+        SELECT p.*, u.username,
+               (SELECT pi.thumbnail_path FROM post_image pi
+                WHERE pi.post_id = p.id ORDER BY pi.id ASC LIMIT 1) AS thumbnail_path
+        FROM post p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE (p.is_private = FALSE OR p.is_private IS NULL)
+          AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+               OR p.content LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- Count search results -->
+    <select id="countSearchPosts" resultType="int">
+        SELECT COUNT(*)
+        FROM post
+        WHERE (is_private = FALSE OR is_private IS NULL)
+          AND (title LIKE CONCAT('%', #{keyword}, '%')
+               OR content LIKE CONCAT('%', #{keyword}, '%'))
+    </select>
+
+    <!-- Find posts by user ID (including private, for my page) -->
+    <select id="findByUserId" resultType="com.devblog.domain.Post">
+        SELECT p.*, u.username,
+               (SELECT pi.thumbnail_path FROM post_image pi
+                WHERE pi.post_id = p.id ORDER BY pi.id ASC LIMIT 1) AS thumbnail_path
+        FROM post p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.user_id = #{userId}
+        ORDER BY p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- Count posts by user ID -->
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM post
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- Find all posts for admin -->
+    <select id="findAllForAdmin" resultType="com.devblog.domain.Post">
+        SELECT p.*, u.username,
+               (SELECT pi.thumbnail_path FROM post_image pi
+                WHERE pi.post_id = p.id ORDER BY pi.id ASC LIMIT 1) AS thumbnail_path
+        FROM post p
+        LEFT JOIN users u ON p.user_id = u.id
+        ORDER BY p.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- Count all posts for admin -->
+    <select id="countAllForAdmin" resultType="int">
+        SELECT COUNT(*) FROM post
+    </select>
+
+    <!-- Toggle post visibility -->
+    <update id="toggleVisibility" parameterType="long">
+        UPDATE post
+        SET is_private = NOT COALESCE(is_private, FALSE),
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規投稿 - DevBlog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Toast UI Editor CDN -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="write-page">
+    <h2>新規投稿</h2>
+
+    <form id="writeForm" th:action="@{/post/write}" method="post" enctype="multipart/form-data">
+
+        <!-- Title -->
+        <div class="form-group">
+            <label for="title">タイトル</label>
+            <input type="text" id="title" name="title" placeholder="タイトルを入力してください" required>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="description">概要（カード表示用）</label>
+            <input type="text" id="description" name="description"
+                   placeholder="記事の簡単な説明を入力してください" maxlength="500">
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+            <label>タグ</label>
+            <input type="hidden" id="tagsHidden" name="tags" value="">
+            <div id="tagInputWrapper" class="tag-input-wrapper">
+                <input type="text" id="tagInputField" placeholder="タグを入力してEnter（例: Spring Boot）">
+            </div>
+        </div>
+
+        <!-- Content (Toast UI Editor) -->
+        <div class="form-group">
+            <label>本文</label>
+            <div id="editor"></div>
+            <textarea id="contentHidden" name="content" style="display:none;" required></textarea>
+        </div>
+
+        <!-- Private toggle -->
+        <div class="form-group">
+            <label>公開設定</label>
+            <div class="toggle-wrapper">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="isPrivate" name="isPrivate" value="true">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span id="privacyLabel">公開</span>
+            </div>
+        </div>
+
+        <!-- Image upload -->
+        <div class="form-group">
+            <label>画像添付（最大10枚）</label>
+            <div class="image-upload-area" onclick="document.getElementById('imageInput').click();">
+                クリックして画像を選択
+            </div>
+            <input type="file" id="imageInput" name="images" accept="image/*" multiple
+                   style="display:none;" onchange="previewImages(this)">
+            <div id="imagePreviewGrid" class="image-preview-grid"></div>
+        </div>
+
+        <!-- Submit -->
+        <div class="flex-between mt-20">
+            <a href="/hello" class="btn btn-secondary">キャンセル</a>
+            <button type="submit" class="btn btn-primary">投稿する</button>
+        </div>
+    </form>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Toast UI Editor JS -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script th:src="@{/js/main.js}"></script>
+<script>
+    // Initialize Toast UI Editor
+    var editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        height: '400px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        placeholder: 'マークダウンで本文を入力してください...'
+    });
+
+    // Sync editor content to hidden textarea before submit
+    document.getElementById('writeForm').addEventListener('submit', function(e) {
+        var content = editor.getMarkdown();
+        if (!content.trim()) {
+            e.preventDefault();
+            alert('本文を入力してください。');
+            return;
+        }
+        document.getElementById('contentHidden').value = content;
+    });
+
+    // Private toggle label
+    document.getElementById('isPrivate').addEventListener('change', function() {
+        document.getElementById('privacyLabel').textContent = this.checked ? '非公開' : '公開';
+    });
+</script>
+</body>
+</html>

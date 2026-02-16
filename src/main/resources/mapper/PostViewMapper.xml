@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devblog.mapper.PostViewMapper">
+
+    <!-- Insert view record -->
+    <insert id="insert" parameterType="long">
+        INSERT INTO post_view (post_id) VALUES (#{postId})
+    </insert>
+
+    <!-- Count views for a post -->
+    <select id="countByPostId" parameterType="long" resultType="int">
+        SELECT COUNT(*) FROM post_view WHERE post_id = #{postId}
+    </select>
+
+</mapper>

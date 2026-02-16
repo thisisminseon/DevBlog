@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devblog.mapper.PostImageMapper">
+
+    <!-- Insert image including thumbnail path -->
+    <insert id="insert" parameterType="com.devblog.domain.PostImage">
+        INSERT INTO post_image
+        (
+            post_id,
+            file_name,
+            file_path,
+            file_size,
+            thumbnail_path
+        )
+        VALUES
+        (
+            #{postId},
+            #{fileName},
+            #{filePath},
+            #{fileSize},
+            #{thumbnailPath}
+        )
+    </insert>
+
+    <!-- Count images by post id -->
+    <select id="countByPostId"
+            parameterType="long"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM post_image
+        WHERE post_id = #{postId}
+    </select>
+
+    <!-- Find images by post id -->
+    <select id="findByPostId"
+            parameterType="long"
+            resultType="com.devblog.domain.PostImage">
+        SELECT *
+        FROM post_image
+        WHERE post_id = #{postId}
+        ORDER BY id ASC
+    </select>
+    
+    <!-- Delete Image -->
+    <delete id="deleteByPostId" parameterType="long">
+    DELETE FROM post_image
+    WHERE post_id = #{postId}
+	</delete>
+
+</mapper>
