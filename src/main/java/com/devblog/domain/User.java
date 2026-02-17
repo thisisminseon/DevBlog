@@ -8,7 +8,8 @@ import lombok.Data;
 public class User {
 
     private Long id;                // user ID (PK)
-    private String username;        // username (unique)
+    private String loginId;         // login ID (unique, for authentication)
+    private String username;        // display name
     private String email;           // email (unique)
     private String password;        // bcrypt hashed password
     private String role;            // role: USER or ADMIN

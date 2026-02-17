@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新規投稿 - DevBlog</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=2)}">
     <!-- Toast UI Editor CDN -->
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
 </head>
@@ -44,7 +44,7 @@
         <div class="form-group">
             <label>本文</label>
             <div id="editor"></div>
-            <textarea id="contentHidden" name="content" style="display:none;" required></textarea>
+            <textarea id="contentHidden" name="content" style="display:none;"></textarea>
         </div>
 
         <!-- Private toggle -->
@@ -83,7 +83,7 @@
 
 <!-- Toast UI Editor JS -->
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/main.js(v=2)}"></script>
 <script>
     // Initialize Toast UI Editor
     var editor = new toastui.Editor({

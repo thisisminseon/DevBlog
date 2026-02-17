@@ -9,7 +9,12 @@
         SELECT * FROM users WHERE id = #{id}
     </select>
 
-    <!-- Find user by username (for login) -->
+    <!-- Find user by loginId (for authentication) -->
+    <select id="findByLoginId" parameterType="string" resultType="com.devblog.domain.User">
+        SELECT * FROM users WHERE login_id = #{loginId}
+    </select>
+
+    <!-- Find user by username -->
     <select id="findByUsername" parameterType="string" resultType="com.devblog.domain.User">
         SELECT * FROM users WHERE username = #{username}
     </select>
@@ -22,8 +27,8 @@
     <!-- Insert new user -->
     <insert id="insert" parameterType="com.devblog.domain.User"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO users (username, email, password, role)
-        VALUES (#{username}, #{email}, #{password}, #{role})
+        INSERT INTO users (login_id, username, email, password, role)
+        VALUES (#{loginId}, #{username}, #{email}, #{password}, #{role})
     </insert>
 
     <!-- Update user info -->

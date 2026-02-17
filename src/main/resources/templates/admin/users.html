@@ -30,6 +30,7 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>ログインID</th>
                 <th>ユーザー名</th>
                 <th>メールアドレス</th>
                 <th>権限</th>
@@ -40,6 +41,7 @@
         <tbody>
             <tr th:each="u : ${users}">
                 <td th:text="${u.id}">1</td>
+                <td th:text="${u.loginId}">loginId</td>
                 <td th:text="${u.username}">user</td>
                 <td th:text="${u.email}">email</td>
                 <td>

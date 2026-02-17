@@ -7,33 +7,24 @@
     <div class="header-inner">
         <a href="/hello" class="header-logo">Dev<span>Blog</span></a>
 
-        <!-- Tag navigation -->
-        <nav class="header-nav">
-            <a th:each="tag : ${navTags}"
-               th:href="@{/hello(tag=${tag.name})}"
-               th:text="'#' + ${tag.name}"
-               th:classappend="${#strings.equals(currentTag, tag.name)} ? 'active' : ''">
-            </a>
-        </nav>
-
         <!-- Actions -->
         <div class="header-actions">
             <button class="btn-search-toggle" onclick="toggleSearch()" title="検索">&#128269;</button>
 
             <!-- Not logged in -->
             <span sec:authorize="!isAuthenticated()">
-                <a th:href="@{/auth/login}">ログイン</a>
+                <a th:href="@{/auth/login}" class="header-btn">ログイン</a>
             </span>
 
             <!-- Logged in -->
             <span sec:authorize="isAuthenticated()">
-                <a th:href="@{/post/write}" class="btn btn-primary btn-sm">新規投稿</a>
-                <a th:href="@{/mypage}">マイページ</a>
+                <a th:href="@{/post/write}" class="header-btn header-btn-primary">新規投稿</a>
+                <a th:href="@{/mypage}" class="header-btn">マイページ</a>
                 <span sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/admin}">管理者</a>
+                    <a th:href="@{/admin}" class="header-btn">管理者</a>
                 </span>
                 <form th:action="@{/auth/logout}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-outline btn-sm">ログアウト</button>
+                    <button type="submit" class="header-btn header-btn-outline">ログアウト</button>
                 </form>
             </span>
         </div>

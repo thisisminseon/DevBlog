@@ -163,24 +163,56 @@ function updateHiddenInput() {
     hiddenInput.value = tags.join(', ');
 }
 
-// ---- Image preview ----
+// ---- Image preview with delete ----
+var selectedFiles = [];
+
 function previewImages(input) {
+    var grid = document.getElementById('imagePreviewGrid');
+    if (!grid) return;
+
+    // Add new files to selectedFiles array
+    if (input.files) {
+        Array.from(input.files).forEach(function(file) {
+            selectedFiles.push(file);
+        });
+    }
+    renderImagePreviews();
+    syncFilesToInput();
+}
+
+function renderImagePreviews() {
     var grid = document.getElementById('imagePreviewGrid');
     if (!grid) return;
     grid.innerHTML = '';
 
-    if (input.files) {
-        Array.from(input.files).forEach(function(file, index) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var div = document.createElement('div');
-                div.className = 'image-preview-item';
-                div.innerHTML = '<img src="' + e.target.result + '" alt="preview">';
-                grid.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+    selectedFiles.forEach(function(file, index) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var div = document.createElement('div');
+            div.className = 'image-preview-item';
+            div.innerHTML =
+                '<img src="' + e.target.result + '" alt="preview">' +
+                '<button type="button" class="remove-preview" onclick="removePreviewImage(' + index + ')" title="削除">&times;</button>';
+            grid.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function removePreviewImage(index) {
+    selectedFiles.splice(index, 1);
+    renderImagePreviews();
+    syncFilesToInput();
+}
+
+function syncFilesToInput() {
+    var input = document.getElementById('imageInput');
+    if (!input) return;
+    var dt = new DataTransfer();
+    selectedFiles.forEach(function(file) {
+        dt.items.add(file);
+    });
+    input.files = dt.files;
 }
 
 // ---- Comment image preview ----

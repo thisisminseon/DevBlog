@@ -26,7 +26,7 @@ public class AuthController {
     public String loginForm(@RequestParam(value = "error", required = false) String error,
                             Model model) {
         if (error != null) {
-            model.addAttribute("errorMessage", "ユーザー名またはパスワードが正しくありません。");
+            model.addAttribute("errorMessage", "IDまたはパスワードが正しくありません。");
         }
         return "auth/login";
     }
@@ -39,7 +39,8 @@ public class AuthController {
 
     // Process signup
     @PostMapping("/signup")
-    public String signup(@RequestParam("username") String username,
+    public String signup(@RequestParam("loginId") String loginId,
+                         @RequestParam("username") String username,
                          @RequestParam("email") String email,
                          @RequestParam("password") String password,
                          @RequestParam("confirmPassword") String confirmPassword,
@@ -48,6 +49,12 @@ public class AuthController {
         // Validate passwords match
         if (!password.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("errorMessage", "パスワードが一致しません。");
+            return "redirect:/auth/signup";
+        }
+
+        // Check loginId duplication
+        if (userService.isLoginIdTaken(loginId)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "このIDは既に使用されています。");
             return "redirect:/auth/signup";
         }
 
@@ -65,6 +72,7 @@ public class AuthController {
 
         // Register user
         User user = new User();
+        user.setLoginId(loginId);
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);

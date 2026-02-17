@@ -54,7 +54,7 @@ public class AdminController {
 
     // Change user role
     @PostMapping("/users/{id}/role")
-    public String changeUserRole(@PathVariable Long id,
+    public String changeUserRole(@PathVariable("id") Long id,
                                  @RequestParam("role") String role,
                                  RedirectAttributes redirectAttributes) {
 
@@ -80,7 +80,7 @@ public class AdminController {
 
     // Toggle post visibility (public/private)
     @PostMapping("/posts/{id}/toggle-visibility")
-    public String toggleVisibility(@PathVariable Long id,
+    public String toggleVisibility(@PathVariable("id") Long id,
                                    RedirectAttributes redirectAttributes) {
 
         postMapper.toggleVisibility(id);

@@ -25,7 +25,7 @@ public class LikeController {
     // Toggle like (returns {liked: true/false, count: N})
     @PostMapping("/toggle/{postId}")
     public ResponseEntity<Map<String, Object>> toggleLike(
-            @PathVariable Long postId,
+            @PathVariable("postId") Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> result = postLikeService.toggleLike(postId, userDetails.getUserId());

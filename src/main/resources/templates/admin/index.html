@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理者ダッシュボード - DevBlog</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=3)}">
 </head>
 <body>
 
@@ -23,17 +23,13 @@
         <div class="stat-card">
             <div class="stat-number" th:text="${userCount}">0</div>
             <div class="stat-label">ユーザー数</div>
+            <a th:href="@{/admin/users}" class="btn btn-secondary btn-sm" style="margin-top:16px;">ユーザー管理</a>
         </div>
         <div class="stat-card">
             <div class="stat-number" th:text="${postCount}">0</div>
             <div class="stat-label">投稿数</div>
+            <a th:href="@{/admin/posts}" class="btn btn-secondary btn-sm" style="margin-top:16px;">投稿管理</a>
         </div>
-    </div>
-
-    <!-- Admin navigation -->
-    <div class="admin-nav">
-        <a th:href="@{/admin/users}" class="btn btn-secondary">ユーザー管理</a>
-        <a th:href="@{/admin/posts}" class="btn btn-secondary">投稿管理</a>
     </div>
 
 </div>

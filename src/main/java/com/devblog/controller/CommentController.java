@@ -55,7 +55,7 @@ public class CommentController {
     @PostMapping("/delete/{id}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteComment(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> result = new HashMap<>();
@@ -77,7 +77,7 @@ public class CommentController {
     @PostMapping("/edit/{id}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> editComment(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestParam("content") String content,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 

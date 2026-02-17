@@ -13,7 +13,10 @@ public interface UserMapper {
     // Find user by ID
     User findById(Long id);
 
-    // Find user by username (for login)
+    // Find user by loginId (for authentication)
+    User findByLoginId(String loginId);
+
+    // Find user by username
     User findByUsername(String username);
 
     // Find user by email

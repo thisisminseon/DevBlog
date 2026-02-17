@@ -22,6 +22,7 @@
         <div class="profile-icon">&#128100;</div>
         <div class="profile-info">
             <h3 th:text="${user.username}">username</h3>
+            <p style="font-size:12px;color:#999;" th:text="'@' + ${user.loginId}">@loginId</p>
             <p th:text="${user.email}">email@example.com</p>
             <p class="text-muted" th:text="'登録日: ' + ${#temporals.format(user.createdAt, 'yyyy年MM月dd日')}">登録日: 2024年01月01日</p>
         </div>

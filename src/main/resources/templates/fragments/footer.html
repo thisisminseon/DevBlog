@@ -16,14 +16,35 @@
             </div>
             <div class="footer-links-group">
                 <h4>コンタクト</h4>
-                <a href="#">GitHub</a>
-                <a href="#">Portfolio</a>
+                <a href="https://github.com/thisisminseon" target="_blank">GitHub</a>
+                <a href="javascript:void(0);" onclick="copyEmail()">Email</a>
             </div>
         </div>
     </div>
     <div class="footer-bottom">
         &copy; 2026 DevBlog. All rights reserved.
     </div>
+    <!-- Email toast -->
+    <div id="emailToast" style="display:none; position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+         background:#333; color:#fff; padding:14px 28px; border-radius:10px; font-size:14px;
+         z-index:9999; box-shadow:0 4px 16px rgba(0,0,0,0.2); transition:opacity 0.3s;">
+        parkms9706@gmail.com をコピーしました!
+    </div>
+    <script>
+        function copyEmail() {
+            navigator.clipboard.writeText('parkms9706@gmail.com').then(function() {
+                var toast = document.getElementById('emailToast');
+                toast.style.display = 'block';
+                toast.style.opacity = '1';
+                setTimeout(function() {
+                    toast.style.opacity = '0';
+                    setTimeout(function() { toast.style.display = 'none'; }, 300);
+                }, 2500);
+            }).catch(function() {
+                prompt('メールアドレスをコピーしてください:', 'parkms9706@gmail.com');
+            });
+        }
+    </script>
 </footer>
 
 </html>

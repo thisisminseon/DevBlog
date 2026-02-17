@@ -91,10 +91,19 @@ public class PostController {
 
         // Set user info
         post.setUserId(userDetails.getUserId());
-        post.setAuthor(userDetails.getUsername());
+        post.setAuthor(userDetails.getDisplayName());
+
+        // Default to public if isPrivate is null
+        if (post.getIsPrivate() == null) {
+            post.setIsPrivate(false);
+        }
+
+        // Filter out empty files
+        boolean hasImages = images != null && images.length > 0
+                && !(images.length == 1 && images[0].isEmpty());
 
         // Max 10 images check
-        if (images != null && images.length > 10) {
+        if (hasImages && images.length > 10) {
             throw new IllegalArgumentException("画像は最大で10枚までアップロードできます。");
         }
 
@@ -108,7 +117,7 @@ public class PostController {
         }
 
         // Save images
-        if (images != null && images.length > 0) {
+        if (hasImages) {
             postImageService.saveImages(post.getId(), images);
         }
 
@@ -117,7 +126,7 @@ public class PostController {
 
     // Edit form page
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Long id,
+    public String editForm(@PathVariable("id") Long id,
                            @AuthenticationPrincipal CustomUserDetails userDetails,
                            Model model) {
 
@@ -157,8 +166,17 @@ public class PostController {
             return "redirect:/post/detail/" + post.getId();
         }
 
+        // Default to public if isPrivate is null
+        if (post.getIsPrivate() == null) {
+            post.setIsPrivate(false);
+        }
+
+        // Filter out empty files
+        boolean hasImages = images != null && images.length > 0
+                && !(images.length == 1 && images[0].isEmpty());
+
         // Max 10 images check
-        if (images != null && images.length > 10) {
+        if (hasImages && images.length > 10) {
             throw new IllegalArgumentException("画像は最大で10枚までアップロードできます。");
         }
 
@@ -171,7 +189,7 @@ public class PostController {
         tagService.syncPostTags(post.getId(), tagList);
 
         // Update images if uploaded
-        if (images != null && images.length > 0) {
+        if (hasImages) {
             postImageService.replaceImages(post.getId(), images);
         }
 
@@ -180,7 +198,7 @@ public class PostController {
 
     // Delete post
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable Long id,
+    public String delete(@PathVariable("id") Long id,
                          @AuthenticationPrincipal CustomUserDetails userDetails,
                          RedirectAttributes redirectAttributes) {
 

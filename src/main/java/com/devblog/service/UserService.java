@@ -38,6 +38,11 @@ public class UserService {
         return userMapper.findByEmail(email);
     }
 
+    // Check if loginId already exists
+    public boolean isLoginIdTaken(String loginId) {
+        return userMapper.findByLoginId(loginId) != null;
+    }
+
     // Check if username already exists
     public boolean isUsernameTaken(String username) {
         return userMapper.findByUsername(username) != null;

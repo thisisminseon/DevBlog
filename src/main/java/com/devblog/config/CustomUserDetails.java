@@ -40,8 +40,14 @@ public class CustomUserDetails implements UserDetails {
         return user.getPassword();
     }
 
+    // Spring Security uses this as the principal (login ID)
     @Override
     public String getUsername() {
+        return user.getLoginId();
+    }
+
+    // Display name for UI
+    public String getDisplayName() {
         return user.getUsername();
     }
 

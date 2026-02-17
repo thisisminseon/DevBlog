@@ -20,9 +20,15 @@
 
         <form th:action="@{/auth/signup}" method="post">
             <div class="form-group">
-                <label for="username">ユーザー名</label>
-                <input type="text" id="username" name="username" required autofocus
-                       placeholder="ユーザー名を入力" minlength="2" maxlength="50">
+                <label for="loginId">ID（ログイン用）</label>
+                <input type="text" id="loginId" name="loginId" required autofocus
+                       placeholder="ログインIDを入力" minlength="3" maxlength="30"
+                       pattern="[a-zA-Z0-9_]+" title="英数字とアンダースコアのみ使用可能">
+            </div>
+            <div class="form-group">
+                <label for="username">ユーザー名（表示名）</label>
+                <input type="text" id="username" name="username" required
+                       placeholder="表示名を入力" minlength="2" maxlength="50">
             </div>
             <div class="form-group">
                 <label for="email">メールアドレス</label>
