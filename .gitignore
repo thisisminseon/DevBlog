@@ -41,3 +41,5 @@ out/
 
 ### Uploads ###
 upload/
+.DS_Store
+**/.DS_Store
