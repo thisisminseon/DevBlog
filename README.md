@@ -28,7 +28,7 @@ DevBlogは、開発者が技術的な知識と経験を共有できるMarkdown�
 |------|------|
 | **Framework** | Spring Boot 3.5.10 |
 | **Language** | Java 17 |
-| **Build Tool** | Gradle 8.x |
+| **Build Tool** | Gradle |
 | **ORM** | MyBatis 3.0.5 |
 | **Security** | Spring Security 6.x + BCrypt |
 | **Markdown** | Flexmark |
