@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBlog - Portfolio</title>
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=LINE+Seed+JP:wght@100;300;400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ===== Reset & Variables ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --accent: #a78bfa;
+            --bg-dark: #0f0e17;
+            --bg-card: #1a1930;
+            --bg-card-hover: #221f3d;
+            --text: #e8e6f0;
+            --text-muted: #9896a8;
+            --text-bright: #ffffff;
+            --border: rgba(99, 102, 241, 0.15);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'LINE Seed JP', 'Inter', 'Noto Sans JP', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== Stars Background ===== */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background: #fff;
+            animation: twinkle var(--duration) ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: var(--min-opacity); }
+            50% { opacity: var(--max-opacity); }
+        }
+
+        @keyframes shootingStar {
+            0% { transform: translateX(0) translateY(0); opacity: 1; }
+            100% { transform: translateX(300px) translateY(300px); opacity: 0; }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            border-radius: 50%;
+            animation: shootingStar 1.5s ease-out infinite;
+        }
+
+        /* ===== Shared ===== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--primary-light);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== Navigation ===== */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 14, 23, 0.8);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-bright);
+            text-decoration: none;
+        }
+
+        .nav-logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary-light); }
+
+        .nav-github {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-github:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--primary-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 24px;
+            padding-bottom: 4px;
+            background: linear-gradient(135deg, var(--text-bright) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            border-radius: 12px;
+            background: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-outline {
+            padding: 14px 32px;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .hero-meta {
+            margin-top: 48px;
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+        }
+
+        .hero-meta-item {
+            text-align: center;
+        }
+
+        .hero-meta-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .hero-meta-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== Overview ===== */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .overview-card {
+            padding: 32px;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .overview-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .overview-card .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .overview-card .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+
+        /* ===== Features ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .feature-tags {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .feature-tag {
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+            font-size: 11px;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ===== Tech Stack ===== */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .tech-category {
+            padding: 32px;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .tech-category h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tech-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .tech-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-bright);
+        }
+
+        .tech-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        /* ===== Design (Tabs) ===== */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 32px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            border: 1px solid var(--border);
+            width: fit-content;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-bright);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .design-placeholder {
+            padding: 48px;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .design-placeholder img {
+            max-width: 100%;
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+
+        .design-placeholder p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ===== Architecture ===== */
+        .arch-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 48px 32px;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .arch-layer {
+            padding: 20px 48px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            min-width: 280px;
+            transition: all 0.3s;
+        }
+
+        .arch-layer:hover {
+            transform: scale(1.05);
+        }
+
+        .arch-layer.client {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--primary-light);
+        }
+
+        .arch-layer.template {
+            background: rgba(167, 139, 250, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            color: var(--accent);
+        }
+
+        .arch-layer.controller {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+        }
+
+        .arch-layer.service {
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+        }
+
+        .arch-layer.mapper {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: #fb7185;
+        }
+
+        .arch-layer.db {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: #38bdf8;
+        }
+
+        .arch-arrow {
+            font-size: 24px;
+            color: var(--text-muted);
+            padding: 8px 0;
+        }
+
+        /* ===== Requirements ===== */
+        .req-table-wrap {
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .req-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .req-table thead {
+            background: var(--bg-card);
+        }
+
+        .req-table th {
+            padding: 14px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary-light);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .req-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.06);
+            color: var(--text);
+        }
+
+        .req-table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.04);
+        }
+
+        .req-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-done {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .badge-screen {
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--primary-light);
+        }
+
+        /* ===== DB Schema ===== */
+        .db-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .db-table-card {
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .db-table-header {
+            padding: 16px 20px;
+            background: rgba(99, 102, 241, 0.08);
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--primary-light);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        .db-columns {
+            padding: 12px 0;
+        }
+
+        .db-col {
+            display: flex;
+            align-items: center;
+            padding: 6px 20px;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .db-col-name {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-bright);
+            min-width: 120px;
+        }
+
+        .db-col-type {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .db-col-badge {
+            margin-left: auto;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .pk { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .fk { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
+        .uq { background: rgba(99, 102, 241, 0.15); color: var(--primary-light); }
+
+        /* ===== API ===== */
+        .api-group {
+            margin-bottom: 24px;
+        }
+
+        .api-group-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+
+        .api-table-wrap {
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .api-table th {
+            padding: 12px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary-light);
+            background: var(--bg-card);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .api-table td {
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.06);
+        }
+
+        .api-table tbody tr:last-child td { border-bottom: none; }
+        .api-table tbody tr:hover { background: rgba(99, 102, 241, 0.04); }
+
+        .method {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .method-get { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .method-post { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+
+        .api-path {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-bright);
+            font-size: 13px;
+        }
+
+        /* ===== Screens ===== */
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .screen-card {
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            transition: all 0.3s;
+        }
+
+        .screen-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .screen-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .screen-card .screen-label {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-bright);
+            text-align: center;
+        }
+
+        /* ===== Troubleshooting ===== */
+        .trouble-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .trouble-card {
+            padding: 32px;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .trouble-card:hover {
+            border-color: var(--primary);
+        }
+
+        .trouble-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .trouble-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 16px;
+        }
+
+        .trouble-section {
+            margin-bottom: 12px;
+        }
+
+        .trouble-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .trouble-label.problem { color: #fb7185; }
+        .trouble-label.cause { color: #fbbf24; }
+        .trouble-label.solution { color: #4ade80; }
+
+        .trouble-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            padding: 48px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 8px;
+        }
+
+        .footer-sub {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 24px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .hero-meta { gap: 24px; }
+            .overview-grid, .features-grid, .tech-grid, .db-grid { grid-template-columns: 1fr; }
+            .screens-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { display: none; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .section-title { font-size: 28px; }
+            .tab-nav { flex-wrap: wrap; }
+        }
+
+        @media (max-width: 480px) {
+            .screens-grid { grid-template-columns: 1fr; }
+            .hero-meta { flex-direction: column; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Stars Background -->
+    <div class="stars-container" id="starsContainer"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <a href="#" class="nav-logo">Dev<span>Blog</span></a>
+            <ul class="nav-links">
+                <li><a href="#overview">概要</a></li>
+                <li><a href="#features">機能</a></li>
+                <li><a href="#tech">技術</a></li>
+                <li><a href="#design">設計</a></li>
+                <li><a href="#requirements">要件</a></li>
+                <li><a href="#database">DB</a></li>
+                <li><a href="#api">API</a></li>
+                <li><a href="#screens">画面</a></li>
+                <li><a href="#troubleshooting">課題</a></li>
+            </ul>
+            <a href="https://github.com/thisisminseon/DevBlog" target="_blank" class="nav-github">
+                Go to <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor" style="vertical-align:middle;margin:0 4px;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> thisisminseon
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content fade-up">
+                <div class="hero-badge">Spring Boot Portfolio Project</div>
+                <h1>DevBlog</h1>
+                <p>
+                    技術的な知見や学びを共有するテックブログ。<br>
+                    Spring Boot を活用した Web アプリケーションの設計から実装まで、<br>
+                    フルスタック開発能力を実証するポートフォリオプロジェクトです。
+                </p>
+                <div class="hero-buttons">
+                    <a href="#features" class="btn-primary">機能を見る</a>
+                    <a href="https://github.com/thisisminseon/DevBlog" target="_blank" class="btn-outline">ソースコード</a>
+                </div>
+                <div class="hero-meta">
+                    <div class="hero-meta-item">
+                        <div class="hero-meta-value">1名</div>
+                        <div class="hero-meta-label">個人開発</div>
+                    </div>
+                    <div class="hero-meta-item">
+                        <div class="hero-meta-value">7+</div>
+                        <div class="hero-meta-label">テーブル</div>
+                    </div>
+                    <div class="hero-meta-item">
+                        <div class="hero-meta-value">20+</div>
+                        <div class="hero-meta-label">エンドポイント</div>
+                    </div>
+                    <div class="hero-meta-item">
+                        <div class="hero-meta-value">10+</div>
+                        <div class="hero-meta-label">主要機能</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview -->
+    <section id="overview">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Overview</div>
+                <h2 class="section-title">プロジェクト概要</h2>
+                <p class="section-desc">開発者としての技術力を実証するために設計・実装した個人プロジェクトです。</p>
+            </div>
+            <div class="overview-grid fade-up">
+                <div class="overview-card">
+                    <div class="label">プロジェクト名</div>
+                    <div class="value">DevBlog（技術ブログ）</div>
+                </div>
+                <div class="overview-card">
+                    <div class="label">開発期間</div>
+                    <div class="value">2025年2月（約4週間）</div>
+                </div>
+                <div class="overview-card">
+                    <div class="label">開発人数</div>
+                    <div class="value">1名（個人開発）</div>
+                </div>
+                <div class="overview-card">
+                    <div class="label">対象ユーザー</div>
+                    <div class="value">IT技術に関心のある開発者・学習者</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Features</div>
+                <h2 class="section-title">主要機能</h2>
+                <p class="section-desc">技術ブログとして必要な機能を網羅的に実装しました。</p>
+            </div>
+            <div class="features-grid fade-up">
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>認証・認可システム</h3>
+                    <p>Spring Securityによるログイン・会員登録・ログアウト。BCryptパスワード暗号化、ロールベースのアクセス制御。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Spring Security</span>
+                        <span class="feature-tag">BCrypt</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>マークダウン記事管理</h3>
+                    <p>Toast UI Editorによるリッチな記事作成。マークダウン→HTML変換、画像アップロード（最大10枚）対応。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Toast UI Editor</span>
+                        <span class="feature-tag">Flexmark</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏷️</div>
+                    <h3>タグベースフィルタリング</h3>
+                    <p>記事にタグを付与し、タグベースでフィルタリング。人気タグのナビゲーション表示で直感的な探索が可能。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">MyBatis</span>
+                        <span class="feature-tag">AJAX</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>コメント・いいね</h3>
+                    <p>コメントの作成・編集・削除（画像添付対応）。AJAXによるリアルタイムいいねトグル機能。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">AJAX</span>
+                        <span class="feature-tag">REST API</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>検索・ページネーション</h3>
+                    <p>キーワードによる記事検索（タイトル・本文）。全一覧ページに番号付きページネーション対応。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">MyBatis</span>
+                        <span class="feature-tag">Thymeleaf</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3>マイページ</h3>
+                    <p>自分の投稿一覧（非公開含む）、プロフィール編集、パスワード変更、アカウント退会機能。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Spring Security</span>
+                        <span class="feature-tag">Session</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>管理者ダッシュボード</h3>
+                    <p>ユーザー管理（権限変更）、投稿管理（公開/非公開切替）。統計情報をダッシュボードで一覧表示。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">ROLE_ADMIN</span>
+                        <span class="feature-tag">Thymeleaf</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌙</div>
+                    <h3>レスポンシブUI</h3>
+                    <p>CSS Grid/Flexboxによるレスポンシブデザイン。夜空テーマとアニメーションで洗練されたUI体験。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">CSS3</span>
+                        <span class="feature-tag">Animation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="tech">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Tech Stack</div>
+                <h2 class="section-title">技術スタック</h2>
+                <p class="section-desc">実務で使用される技術を選定し、効率的な開発を実現しました。</p>
+            </div>
+            <div class="tech-grid fade-up">
+                <div class="tech-category">
+                    <h3>Backend</h3>
+                    <div class="tech-list">
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Java 17</span>
+                            <span class="tech-desc">開発言語</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Spring Boot 3.5</span>
+                            <span class="tech-desc">フレームワーク</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Spring Security</span>
+                            <span class="tech-desc">認証・認可</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">MyBatis 3.0</span>
+                            <span class="tech-desc">ORマッパー</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Lombok</span>
+                            <span class="tech-desc">コード簡略化</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Flexmark</span>
+                            <span class="tech-desc">Markdown変換</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3>Frontend</h3>
+                    <div class="tech-list">
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Thymeleaf</span>
+                            <span class="tech-desc">テンプレート</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">HTML5 / CSS3</span>
+                            <span class="tech-desc">マークアップ</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">JavaScript</span>
+                            <span class="tech-desc">動的処理</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Toast UI Editor</span>
+                            <span class="tech-desc">エディタ</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3>Database</h3>
+                    <div class="tech-list">
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">MySQL 8.0</span>
+                            <span class="tech-desc">RDBMS</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">MySQL Workbench</span>
+                            <span class="tech-desc">DB管理ツール</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3>Tools</h3>
+                    <div class="tech-list">
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Eclipse (STS)</span>
+                            <span class="tech-desc">IDE</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Gradle</span>
+                            <span class="tech-desc">ビルドツール</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot"></span>
+                            <span class="tech-name">Git / GitHub</span>
+                            <span class="tech-desc">バージョン管理</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design -->
+    <section id="design">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Design</div>
+                <h2 class="section-title">設計</h2>
+                <p class="section-desc">ERD とアーキテクチャの設計を通じて、堅牢なシステム構造を実現しました。</p>
+            </div>
+            <div class="fade-up">
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="switchTab('design', 'erd')">ER図</button>
+                    <button class="tab-btn" onclick="switchTab('design', 'arch')">アーキテクチャ</button>
+                </div>
+
+                <div class="tab-content active" id="design-erd">
+                    <div class="design-placeholder">
+                        <!-- ERD image placeholder -->
+                        <p style="font-size:48px; margin-bottom:16px;">📊</p>
+                        <p>ER図を表示するには、<code>docs/images/erd.png</code> に画像を配置してください。</p>
+                        <p style="margin-top:8px; font-size:12px; color:var(--text-muted);">MySQL Workbench → Database → Reverse Engineer → Export as PNG</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="design-arch">
+                    <div class="arch-flow">
+                        <div class="arch-layer client">Client（Browser）</div>
+                        <div class="arch-arrow">▼</div>
+                        <div class="arch-layer template">Thymeleaf Templates + CSS / JS</div>
+                        <div class="arch-arrow">▼</div>
+                        <div class="arch-layer controller">Controller Layer（Spring MVC）</div>
+                        <div class="arch-arrow">▼</div>
+                        <div class="arch-layer service">Service Layer（Business Logic）</div>
+                        <div class="arch-arrow">▼</div>
+                        <div class="arch-layer mapper">Mapper Layer（MyBatis XML）</div>
+                        <div class="arch-arrow">▼</div>
+                        <div class="arch-layer db">MySQL Database</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements -->
+    <section id="requirements">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Requirements</div>
+                <h2 class="section-title">要件定義</h2>
+                <p class="section-desc">画面別に機能要件を整理し、漏れのない実装を目指しました。</p>
+            </div>
+            <div class="fade-up">
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="switchTab('req', 'auth')">認証</button>
+                    <button class="tab-btn" onclick="switchTab('req', 'post')">記事</button>
+                    <button class="tab-btn" onclick="switchTab('req', 'community')">コミュニティ</button>
+                    <button class="tab-btn" onclick="switchTab('req', 'admin')">管理者</button>
+                </div>
+
+                <div class="tab-content active" id="req-auth">
+                    <div class="req-table-wrap">
+                        <table class="req-table">
+                            <thead>
+                                <tr><th>ID</th><th>機能</th><th>説明</th><th>状態</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>FR-001</td><td>会員登録</td><td>ログインID・ユーザー名・メール・パスワードで新規登録</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-002</td><td>ログイン</td><td>ログインIDとパスワードによる認証、ID記憶機能</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-003</td><td>ログアウト</td><td>セッション無効化によるログアウト</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-004</td><td>プロフィール編集</td><td>ユーザー名・メールアドレスの変更</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-005</td><td>パスワード変更</td><td>現在のパスワード確認後、新しいパスワードに変更</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-006</td><td>アカウント退会</td><td>アカウントと関連データの削除</td><td><span class="badge badge-done">完了</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="req-post">
+                    <div class="req-table-wrap">
+                        <table class="req-table">
+                            <thead>
+                                <tr><th>ID</th><th>機能</th><th>説明</th><th>状態</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>FR-101</td><td>記事作成</td><td>マークダウンエディタで記事作成、タグ付け、画像アップロード</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-102</td><td>記事編集</td><td>投稿者本人または管理者のみ編集可能</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-103</td><td>記事削除</td><td>投稿者本人または管理者のみ削除可能</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-104</td><td>画像アップロード</td><td>最大10枚の画像アップロード、プレビュー・削除対応</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-105</td><td>公開/非公開</td><td>記事の公開・非公開の切り替え</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-106</td><td>検索</td><td>タイトル・本文のキーワード検索</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-107</td><td>ページネーション</td><td>10件ずつ表示、番号付きページ切り替え</td><td><span class="badge badge-done">完了</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="req-community">
+                    <div class="req-table-wrap">
+                        <table class="req-table">
+                            <thead>
+                                <tr><th>ID</th><th>機能</th><th>説明</th><th>状態</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>FR-201</td><td>コメント作成</td><td>記事へのコメント投稿（画像添付対応）</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-202</td><td>コメント編集</td><td>自分のコメントの編集（AJAX対応）</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-203</td><td>コメント削除</td><td>自分のコメントの削除（AJAX対応）</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-204</td><td>いいね</td><td>AJAXによるリアルタイムいいねトグル</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-205</td><td>タグフィルタリング</td><td>タグクリックで関連記事をフィルタリング</td><td><span class="badge badge-done">完了</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="req-admin">
+                    <div class="req-table-wrap">
+                        <table class="req-table">
+                            <thead>
+                                <tr><th>ID</th><th>機能</th><th>説明</th><th>状態</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>FR-301</td><td>ダッシュボード</td><td>ユーザー数・投稿数の統計表示</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-302</td><td>ユーザー管理</td><td>ユーザー一覧表示、権限変更（USER↔ADMIN）</td><td><span class="badge badge-done">完了</span></td></tr>
+                                <tr><td>FR-303</td><td>投稿管理</td><td>全投稿一覧、公開/非公開の一括切り替え</td><td><span class="badge badge-done">完了</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Database -->
+    <section id="database">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Database</div>
+                <h2 class="section-title">DB設計</h2>
+                <p class="section-desc">7つのテーブルで構成された正規化されたデータベース設計です。</p>
+            </div>
+            <div class="db-grid fade-up">
+                <div class="db-table-card">
+                    <div class="db-table-header">users</div>
+                    <div class="db-columns">
+                        <div class="db-col"><span class="db-col-name">id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge pk">PK</span></div>
+                        <div class="db-col"><span class="db-col-name">login_id</span><span class="db-col-type">VARCHAR</span><span class="db-col-badge uq">UQ</span></div>
+                        <div class="db-col"><span class="db-col-name">username</span><span class="db-col-type">VARCHAR</span><span class="db-col-badge uq">UQ</span></div>
+                        <div class="db-col"><span class="db-col-name">email</span><span class="db-col-type">VARCHAR</span><span class="db-col-badge uq">UQ</span></div>
+                        <div class="db-col"><span class="db-col-name">password</span><span class="db-col-type">VARCHAR</span></div>
+                        <div class="db-col"><span class="db-col-name">role</span><span class="db-col-type">VARCHAR</span></div>
+                        <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">TIMESTAMP</span></div>
+                    </div>
+                </div>
+                <div class="db-table-card">
+                    <div class="db-table-header">post</div>
+                    <div class="db-columns">
+                        <div class="db-col"><span class="db-col-name">id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge pk">PK</span></div>
+                        <div class="db-col"><span class="db-col-name">user_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                        <div class="db-col"><span class="db-col-name">title</span><span class="db-col-type">VARCHAR</span></div>
+                        <div class="db-col"><span class="db-col-name">content</span><span class="db-col-type">LONGTEXT</span></div>
+                        <div class="db-col"><span class="db-col-name">description</span><span class="db-col-type">VARCHAR</span></div>
+                        <div class="db-col"><span class="db-col-name">is_private</span><span class="db-col-type">BOOLEAN</span></div>
+                        <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">TIMESTAMP</span></div>
+                    </div>
+                </div>
+                <div class="db-table-card">
+                    <div class="db-table-header">comment</div>
+                    <div class="db-columns">
+                        <div class="db-col"><span class="db-col-name">id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge pk">PK</span></div>
+                        <div class="db-col"><span class="db-col-name">post_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                        <div class="db-col"><span class="db-col-name">user_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                        <div class="db-col"><span class="db-col-name">content</span><span class="db-col-type">TEXT</span></div>
+                        <div class="db-col"><span class="db-col-name">image_path</span><span class="db-col-type">VARCHAR</span></div>
+                        <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">TIMESTAMP</span></div>
+                    </div>
+                </div>
+                <div class="db-table-card">
+                    <div class="db-table-header">tag</div>
+                    <div class="db-columns">
+                        <div class="db-col"><span class="db-col-name">id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge pk">PK</span></div>
+                        <div class="db-col"><span class="db-col-name">name</span><span class="db-col-type">VARCHAR</span><span class="db-col-badge uq">UQ</span></div>
+                    </div>
+                </div>
+                <div class="db-table-card">
+                    <div class="db-table-header">post_tag</div>
+                    <div class="db-columns">
+                        <div class="db-col"><span class="db-col-name">post_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                        <div class="db-col"><span class="db-col-name">tag_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                    </div>
+                </div>
+                <div class="db-table-card">
+                    <div class="db-table-header">post_image</div>
+                    <div class="db-columns">
+                        <div class="db-col"><span class="db-col-name">id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge pk">PK</span></div>
+                        <div class="db-col"><span class="db-col-name">post_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                        <div class="db-col"><span class="db-col-name">file_name</span><span class="db-col-type">VARCHAR</span></div>
+                        <div class="db-col"><span class="db-col-name">file_path</span><span class="db-col-type">VARCHAR</span></div>
+                        <div class="db-col"><span class="db-col-name">file_size</span><span class="db-col-type">BIGINT</span></div>
+                        <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">TIMESTAMP</span></div>
+                    </div>
+                </div>
+                <div class="db-table-card">
+                    <div class="db-table-header">post_like</div>
+                    <div class="db-columns">
+                        <div class="db-col"><span class="db-col-name">id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge pk">PK</span></div>
+                        <div class="db-col"><span class="db-col-name">post_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                        <div class="db-col"><span class="db-col-name">user_id</span><span class="db-col-type">BIGINT</span><span class="db-col-badge fk">FK</span></div>
+                        <div class="db-col"><span class="db-col-name">created_at</span><span class="db-col-type">TIMESTAMP</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API -->
+    <section id="api">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">API Design</div>
+                <h2 class="section-title">URL設計</h2>
+                <p class="section-desc">RESTful設計に基づいたエンドポイント一覧です。</p>
+            </div>
+            <div class="fade-up">
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="switchTab('api', 'auth2')">認証</button>
+                    <button class="tab-btn" onclick="switchTab('api', 'posts')">記事</button>
+                    <button class="tab-btn" onclick="switchTab('api', 'social')">コメント・いいね</button>
+                    <button class="tab-btn" onclick="switchTab('api', 'user')">マイページ</button>
+                    <button class="tab-btn" onclick="switchTab('api', 'admin2')">管理者</button>
+                </div>
+
+                <div class="tab-content active" id="api-auth2">
+                    <div class="api-table-wrap">
+                        <table class="api-table">
+                            <thead><tr><th>Method</th><th>Endpoint</th><th>説明</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/auth/login</td><td>ログインページ</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/auth/signup</td><td>会員登録ページ</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/auth/signup</td><td>会員登録処理</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="api-posts">
+                    <div class="api-table-wrap">
+                        <table class="api-table">
+                            <thead><tr><th>Method</th><th>Endpoint</th><th>説明</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/hello</td><td>メインページ（記事一覧）</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/post/detail/{id}</td><td>記事詳細</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/post/write</td><td>記事作成フォーム</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/post/write</td><td>記事作成処理</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/post/edit/{id}</td><td>記事編集フォーム</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/post/edit</td><td>記事更新処理</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/post/delete/{id}</td><td>記事削除</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/post/search</td><td>記事検索</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="api-social">
+                    <div class="api-table-wrap">
+                        <table class="api-table">
+                            <thead><tr><th>Method</th><th>Endpoint</th><th>説明</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/comment/add</td><td>コメント追加</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/comment/edit/{id}</td><td>コメント編集</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/comment/delete/{id}</td><td>コメント削除</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/api/like/toggle/{postId}</td><td>いいねトグル</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="api-user">
+                    <div class="api-table-wrap">
+                        <table class="api-table">
+                            <thead><tr><th>Method</th><th>Endpoint</th><th>説明</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/mypage</td><td>マイページ</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/mypage/edit-profile</td><td>プロフィール編集</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/mypage/edit-profile</td><td>プロフィール更新</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/mypage/change-password</td><td>パスワード変更</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/mypage/delete-account</td><td>アカウント退会</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="api-admin2">
+                    <div class="api-table-wrap">
+                        <table class="api-table">
+                            <thead><tr><th>Method</th><th>Endpoint</th><th>説明</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/admin</td><td>管理者ダッシュボード</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/admin/users</td><td>ユーザー管理</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/admin/users/{id}/role</td><td>権限変更</td></tr>
+                                <tr><td><span class="method method-get">GET</span></td><td class="api-path">/admin/posts</td><td>投稿管理</td></tr>
+                                <tr><td><span class="method method-post">POST</span></td><td class="api-path">/admin/posts/{id}/toggle-visibility</td><td>公開/非公開切替</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screens -->
+    <section id="screens">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Screenshots</div>
+                <h2 class="section-title">画面一覧</h2>
+                <p class="section-desc">各画面のスクリーンショットです。<code>docs/images/</code> フォルダに画像を配置してください。</p>
+            </div>
+            <div class="screens-grid fade-up">
+                <div class="screen-card">
+                    <img src="images/screen-home.png" alt="ホーム" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>HOME</text></svg>'">
+                    <div class="screen-label">ホーム</div>
+                </div>
+                <div class="screen-card">
+                    <img src="images/screen-login.png" alt="ログイン" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>LOGIN</text></svg>'">
+                    <div class="screen-label">ログイン</div>
+                </div>
+                <div class="screen-card">
+                    <img src="images/screen-write.png" alt="記事作成" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>WRITE</text></svg>'">
+                    <div class="screen-label">記事作成</div>
+                </div>
+                <div class="screen-card">
+                    <img src="images/screen-detail.png" alt="記事詳細" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>DETAIL</text></svg>'">
+                    <div class="screen-label">記事詳細</div>
+                </div>
+                <div class="screen-card">
+                    <img src="images/screen-mypage.png" alt="マイページ" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>MYPAGE</text></svg>'">
+                    <div class="screen-label">マイページ</div>
+                </div>
+                <div class="screen-card">
+                    <img src="images/screen-admin.png" alt="管理者" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>ADMIN</text></svg>'">
+                    <div class="screen-label">管理者ダッシュボード</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section id="troubleshooting">
+        <div class="container">
+            <div class="fade-up">
+                <div class="section-label">Troubleshooting</div>
+                <h2 class="section-title">課題と解決</h2>
+                <p class="section-desc">開発中に直面した技術的課題と、その原因分析・解決過程です。</p>
+            </div>
+            <div class="trouble-list fade-up">
+                <div class="trouble-card">
+                    <div class="trouble-title"><span class="trouble-num">1</span>投稿アップロードの失敗</div>
+                    <div class="trouble-section">
+                        <div class="trouble-label problem">問題</div>
+                        <div class="trouble-text">記事作成時に「投稿に失敗しました」エラーが発生し、データが保存されない。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label cause">原因</div>
+                        <div class="trouble-text">Eclipse の -parameters コンパイラオプション未設定により、@RequestParam のパラメータ名が解決できなかった。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label solution">解決</div>
+                        <div class="trouble-text">全ての @RequestParam と @PathVariable にアノテーション引数を明示的に記述。例：@RequestParam("title")</div>
+                    </div>
+                </div>
+
+                <div class="trouble-card">
+                    <div class="trouble-title"><span class="trouble-num">2</span>記事編集ページの500エラー</div>
+                    <div class="trouble-section">
+                        <div class="trouble-label problem">問題</div>
+                        <div class="trouble-text">記事の編集ページにアクセスすると500 Internal Server Errorが発生。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label cause">原因</div>
+                        <div class="trouble-text">@PathVariable("id") のアノテーション引数が未指定で、パラメータバインドに失敗。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label solution">解決</div>
+                        <div class="trouble-text">@PathVariable("id") と明示的に記述し、Controllerの全メソッドを同様に修正。</div>
+                    </div>
+                </div>
+
+                <div class="trouble-card">
+                    <div class="trouble-title"><span class="trouble-num">3</span>Flexmarkライブラリの解決失敗</div>
+                    <div class="trouble-section">
+                        <div class="trouble-label problem">問題</div>
+                        <div class="trouble-text">「The import com.vladsch cannot be resolved」エラーでアプリケーションが起動不可。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label cause">原因</div>
+                        <div class="trouble-text">EclipseのGradle依存関係の同期が切れ、外部ライブラリが認識されなくなった。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label solution">解決</div>
+                        <div class="trouble-text">Gradle → Refresh Gradle Project → Project → Clean → IDE再起動で依存関係を再同期。</div>
+                    </div>
+                </div>
+
+                <div class="trouble-card">
+                    <div class="trouble-title"><span class="trouble-num">4</span>ファビコンが表示されない</div>
+                    <div class="trouble-section">
+                        <div class="trouble-label problem">問題</div>
+                        <div class="trouble-text">staticフォルダにファビコンを配置しても、ブラウザに反映されない（5回の試行）。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label cause">原因</div>
+                        <div class="trouble-text">Eclipse(STS)がファイルシステムの変更を bin/main に自動同期しない仕様。Cleanするとコピーしたファイルが消される。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label solution">解決</div>
+                        <div class="trouble-text">STS Package Explorerから直接ファイルをインポートし、Thymeleafの th:href で参照。</div>
+                    </div>
+                </div>
+
+                <div class="trouble-card">
+                    <div class="trouble-title"><span class="trouble-num">5</span>画像プレビュー削除ボタンの無反応</div>
+                    <div class="trouble-section">
+                        <div class="trouble-label problem">問題</div>
+                        <div class="trouble-text">記事作成時、画像プレビューのホバー削除ボタンがクリックできない。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label cause">原因</div>
+                        <div class="trouble-text">親要素の overflow: hidden が削除ボタンを隠し、z-index の設定不足でクリックイベントが届かなかった。</div>
+                    </div>
+                    <div class="trouble-section">
+                        <div class="trouble-label solution">解決</div>
+                        <div class="trouble-text">overflow: hidden を削除、z-index: 10 を追加、DataTransfer APIでFileListを動的管理。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-title">Dev<span style="color:var(--primary)">Blog</span></div>
+            <div class="footer-sub">技術的な知見や学びを共有するテックブログ</div>
+            <a href="https://github.com/thisisminseon/DevBlog" target="_blank" class="btn-primary" style="display:inline-block;">GitHub Repository</a>
+            <div class="footer-copy">&copy; 2025 DevBlog. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== Stars =====
+        (function() {
+            const container = document.getElementById('starsContainer');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2.5 + 0.5;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (Math.random() * 4 + 2) + 's');
+                star.style.setProperty('--min-opacity', '0.1');
+                star.style.setProperty('--max-opacity', (Math.random() * 0.6 + 0.4).toString());
+                star.style.animationDelay = Math.random() * 4 + 's';
+                container.appendChild(star);
+            }
+
+            // Shooting stars
+            function createShootingStar() {
+                const star = document.createElement('div');
+                star.className = 'shooting-star';
+                star.style.left = Math.random() * 70 + '%';
+                star.style.top = Math.random() * 50 + '%';
+                star.style.width = Math.random() * 80 + 40 + 'px';
+                container.appendChild(star);
+                setTimeout(() => star.remove(), 1500);
+            }
+            setInterval(createShootingStar, 4000);
+        })();
+
+        // ===== Scroll animations =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // ===== Tabs =====
+        function switchTab(group, tab) {
+            document.querySelectorAll(`[id^="${group}-"]`).forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(`${group}-${tab}`).classList.add('active');
+
+            const section = document.getElementById(`${group}-${tab}`).closest('section');
+            const navBtns = section.querySelectorAll('.tab-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // ===== Nav scroll effect =====
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.style.padding = '10px 0';
+                nav.style.background = 'rgba(15, 14, 23, 0.95)';
+            } else {
+                nav.style.padding = '16px 0';
+                nav.style.background = 'rgba(15, 14, 23, 0.8)';
+            }
+        });
+    </script>
+</body>
+</html>
