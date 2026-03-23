@@ -112,6 +112,60 @@
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
         }
 
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 28px;
+            color: var(--text-bright);
+            font-size: 15px;
+            font-weight: 500;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast-email {
+            color: var(--primary-light);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .toast-copy {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .toast-copy:hover {
+            background: var(--primary-dark);
+        }
+
         /* ===== Shared ===== */
         .container {
             max-width: 1100px;
@@ -855,6 +909,7 @@
             border: 1px solid var(--border);
             background: var(--bg-card);
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .screen-card:hover {
@@ -874,6 +929,34 @@
             font-weight: 600;
             color: var(--text-bright);
             text-align: center;
+        }
+
+        .screen-fullscreen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            padding: 32px;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .screen-fullscreen img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: var(--radius);
+            box-shadow: 0 0 60px rgba(99, 102, 241, 0.3);
+        }
+
+        .screen-fullscreen .screen-fullscreen-label {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
         }
 
         /* ===== Troubleshooting ===== */
@@ -1582,27 +1665,27 @@
                 <p class="section-desc">DevBlogの全画面を一目で確認できます！</p>
             </div>
             <div class="screens-grid fade-up">
-                <div class="screen-card">
+                <div class="screen-card" onclick="openScreen(this)">
                     <img src="images/home.gif" alt="ホーム" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>HOME</text></svg>'">
                     <div class="screen-label">ホーム</div>
                 </div>
-                <div class="screen-card">
+                <div class="screen-card" onclick="openScreen(this)">
                     <img src="images/login.gif" alt="ログイン" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>LOGIN</text></svg>'">
                     <div class="screen-label">ログイン</div>
                 </div>
-                <div class="screen-card">
+                <div class="screen-card" onclick="openScreen(this)">
                     <img src="images/write_post.png" alt="記事作成" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>WRITE</text></svg>'">
                     <div class="screen-label">記事作成</div>
                 </div>
-                <div class="screen-card">
+                <div class="screen-card" onclick="openScreen(this)">
                     <img src="images/detail.gif" alt="記事詳細" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>DETAIL</text></svg>'">
                     <div class="screen-label">記事詳細</div>
                 </div>
-                <div class="screen-card">
+                <div class="screen-card" onclick="openScreen(this)">
                     <img src="images/mypage.gif" alt="マイページ" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>MYPAGE</text></svg>'">
                     <div class="screen-label">マイページ</div>
                 </div>
-                <div class="screen-card">
+                <div class="screen-card" onclick="openScreen(this)">
                     <img src="images/admin.gif" alt="管理者" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22><rect fill=%22%231a1930%22 width=%22400%22 height=%22250%22/><text fill=%22%236366f1%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22>ADMIN</text></svg>'">
                     <div class="screen-label">管理者ダッシュボード</div>
                 </div>
@@ -1710,8 +1793,17 @@
         <div class="container">
             <div class="footer-title">Dev<span style="color:var(--primary)">Blog</span></div>
             <div class="footer-sub">技術的な知見や学びを共有するテックブログ</div>
-            <a href="https://github.com/thisisminseon/DevBlog" target="_blank" class="btn-primary" style="display:inline-block;">GitHub Repository</a>
-            <div class="footer-copy">&copy; 2025 DevBlog. All rights reserved.</div>
+            <div style="display:flex;gap:16px;justify-content:center;">
+                <a href="https://github.com/thisisminseon" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;">
+                    <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub Profile
+                </a>
+                <button class="btn-outline" style="display:inline-flex;align-items:center;gap:8px;" onclick="showToast()">
+                    <svg height="18" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>
+                    Contact Me
+                </button>
+            </div>
+            <div class="footer-copy">&copy; 2025 Park Minseon. All rights reserved.</div>
         </div>
     </footer>
 
@@ -1769,6 +1861,41 @@
             const navBtns = section.querySelectorAll('.tab-btn');
             navBtns.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+        }
+
+        // ===== Toast =====
+        function showToast() {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = '<span class="toast-icon">&#9993;</span><span class="toast-email">parkms9706@gmail.com</span><button class="toast-copy" onclick="copyEmail(event)">Copy</button>';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        function copyEmail(e) {
+            e.stopPropagation();
+            navigator.clipboard.writeText('parkms9706@gmail.com');
+            const btn = e.target;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 1500);
+        }
+
+        // ===== Screen fullscreen =====
+        function openScreen(card) {
+            const img = card.querySelector('img');
+            const label = card.querySelector('.screen-label');
+            const overlay = document.createElement('div');
+            overlay.className = 'screen-fullscreen';
+            overlay.innerHTML = '<img src="' + img.src + '" alt="' + img.alt + '"><div class="screen-fullscreen-label">' + label.textContent + '</div>';
+            overlay.onclick = () => overlay.remove();
+            document.body.appendChild(overlay);
         }
 
         // ===== ERD fullscreen =====
