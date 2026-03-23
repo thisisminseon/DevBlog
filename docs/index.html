@@ -79,9 +79,11 @@
             position: fixed;
             bottom: 32px;
             right: 32px;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+            width: 52px;
+            height: 60px;
+            border-radius: 14px;
+            flex-direction: column;
+            gap: 2px;
             background: var(--primary);
             color: #fff;
             border: none;
@@ -548,6 +550,47 @@
         .design-placeholder p {
             color: var(--text-muted);
             font-size: 14px;
+        }
+
+        .erd-container {
+            padding: 32px;
+            border-radius: var(--radius);
+            background: #fff;
+            border: 1px solid var(--border);
+            text-align: center;
+            overflow: hidden;
+            cursor: zoom-in;
+            position: relative;
+        }
+
+        .erd-container img {
+            width: 100%;
+            max-width: 900px;
+            border-radius: var(--radius-sm);
+            transition: transform 0.3s;
+        }
+
+        .erd-container:hover img {
+            transform: scale(1.02);
+        }
+
+        .erd-fullscreen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            padding: 32px;
+        }
+
+        .erd-fullscreen img {
+            max-width: 95%;
+            max-height: 95vh;
+            border-radius: var(--radius);
         }
 
         /* ===== Architecture ===== */
@@ -1241,11 +1284,9 @@
                 </div>
 
                 <div class="tab-content active" id="design-erd">
-                    <div class="design-placeholder">
-                        <!-- ERD image placeholder -->
-                        <p style="font-size:48px; margin-bottom:16px;">📊</p>
-                        <p>ER図を表示するには、<code>docs/images/erd.png</code> に画像を配置してください。</p>
-                        <p style="margin-top:8px; font-size:12px; color:var(--text-muted);">MySQL Workbench → Database → Reverse Engineer → Export as PNG</p>
+                    <div class="erd-container" onclick="openErd()">
+                        <img src="images/erd.png" alt="ERD - DevBlog Database">
+                        <p style="margin-top:16px; color:var(--text-muted); font-size:13px;">クリックで拡大表示</p>
                     </div>
                 </div>
 
@@ -1663,7 +1704,7 @@
     </section>
 
     <!-- Top Button -->
-    <button class="top-btn" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</button>
+    <button class="top-btn" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><span style="font-size:16px;">&#9650;</span><span style="font-size:11px;font-weight:700;letter-spacing:1px;">TOP</span></button>
 
     <!-- Footer -->
     <footer class="footer">
@@ -1729,6 +1770,15 @@
             const navBtns = section.querySelectorAll('.tab-btn');
             navBtns.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+        }
+
+        // ===== ERD fullscreen =====
+        function openErd() {
+            const overlay = document.createElement('div');
+            overlay.className = 'erd-fullscreen';
+            overlay.innerHTML = '<img src="images/erd.png" alt="ERD">';
+            overlay.onclick = () => overlay.remove();
+            document.body.appendChild(overlay);
         }
 
         // ===== Top button =====
