@@ -63,15 +63,51 @@
 
         @keyframes shootingStar {
             0% { transform: translateX(0) translateY(0); opacity: 1; }
-            100% { transform: translateX(300px) translateY(300px); opacity: 0; }
+            100% { transform: translateX(500px) translateY(500px); opacity: 0; }
         }
 
         .shooting-star {
             position: absolute;
             width: 2px; height: 2px;
-            background: linear-gradient(90deg, #fff, transparent);
+            background: linear-gradient(135deg, #fff, rgba(99, 102, 241, 0.6), transparent);
             border-radius: 50%;
-            animation: shootingStar 1.5s ease-out infinite;
+            animation: shootingStar 0.7s ease-out forwards;
+        }
+
+        /* ===== Top Button ===== */
+        .top-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+        }
+
+        .top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .top-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
         }
 
         /* ===== Shared ===== */
@@ -1626,6 +1662,9 @@
         </div>
     </section>
 
+    <!-- Top Button -->
+    <button class="top-btn" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</button>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1659,13 +1698,13 @@
             function createShootingStar() {
                 const star = document.createElement('div');
                 star.className = 'shooting-star';
-                star.style.left = Math.random() * 70 + '%';
-                star.style.top = Math.random() * 50 + '%';
-                star.style.width = Math.random() * 80 + 40 + 'px';
+                star.style.left = Math.random() * 60 + '%';
+                star.style.top = Math.random() * 40 + '%';
+                star.style.width = Math.random() * 120 + 60 + 'px';
                 container.appendChild(star);
-                setTimeout(() => star.remove(), 1500);
+                setTimeout(() => star.remove(), 700);
             }
-            setInterval(createShootingStar, 4000);
+            setInterval(createShootingStar, 2000);
         })();
 
         // ===== Scroll animations =====
@@ -1691,6 +1730,16 @@
             navBtns.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
+
+        // ===== Top button =====
+        const topBtn = document.getElementById('topBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                topBtn.classList.add('show');
+            } else {
+                topBtn.classList.remove('show');
+            }
+        });
 
         // ===== Nav scroll effect =====
         window.addEventListener('scroll', () => {
